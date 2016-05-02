@@ -1,0 +1,30 @@
+---
+  - hosts: cdsceunes
+    vars:
+      mirror_args: main contrib non-free
+      mirror_url: http://ftp.br.debian.org/debian/
+      mirror_backports: "{{ mirror_url }}" + "jessie-backports" +  "{{ mirror_args }}"
+      mirror_main: {{ mirror_url + 'jessie' + mirror_args }}
+      mirror_update: {{ mirror_url + 'jessie-updates' + mirror_args }}
+    tasks:
+      - name: add mirrors
+        copy: content={{ item }} dest="/etc/apt/sources.list"
+        with_items:
+          - "{{ mirror_main }}"
+          - "{{mirror_update}}"
+          - "{{mirror_backports}}"
+      - name: add user nonroot
+        user: name=cdsserver state=present groups=sudo
+      - name: install build-essential
+        apt: name=build-essential state=latest
+      - name: install OpenJDK 8
+        apt: name={{ item }} state=present
+        with_items:
+          - openjdk-8-jdk
+          - openjdk-8-jre
+      - name: install dependencies for server
+        apt: name={{ item }} state=present
+        with_items:
+          - git
+          - mariadb-server
+          - mariadb-client
