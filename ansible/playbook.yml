@@ -1,18 +1,20 @@
 ---
-  - hosts: cdsceunes
+  - hosts: all
+    roles:
+      - common
     vars:
-      mirror_args: main contrib non-free
-      mirror_url: http://ftp.br.debian.org/debian/
-      mirror_backports: "{{ mirror_url }}" + "jessie-backports" +  "{{ mirror_args }}"
-      mirror_main: {{ mirror_url + 'jessie' + mirror_args }}
-      mirror_update: {{ mirror_url + 'jessie-updates' + mirror_args }}
+      mirror_args: "main contrib non-free"
+      mirror_url: "http://ftp.br.debian.org/debian/"
+      mirror_backports: "{{ mirror_url }} jessie-backports {{ mirror_args }}"
+      mirror_main: "{{ mirror_url }} jessie {{ mirror_args }}"
+      mirror_update: "{{ mirror_url }} jessie-updates {{ mirror_args }}"
     tasks:
       - name: add mirrors
-        copy: content={{ item }} dest="/etc/apt/sources.list"
+        copy: content="mirror_{{ item }}" dest="/etc/apt/sources.list" sudo=yes
         with_items:
-          - "{{ mirror_main }}"
-          - "{{mirror_update}}"
-          - "{{mirror_backports}}"
+          - main
+          - update
+          - backports
       - name: add user nonroot
         user: name=cdsserver state=present groups=sudo
       - name: install build-essential
