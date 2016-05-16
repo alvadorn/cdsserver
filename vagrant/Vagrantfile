@@ -5,9 +5,13 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "debian/jessie64"
+  config.vm.box = "centos/7"
 
-  config.vm.box_url = "debian/jessie64"
+  config.vm.box_url = "centos/7"
+
+  config.ssh.username = "root"
+  #config.ssh.password = "vagrant"
+  #config.ssh.insert_key = "true"
 
   config.vm.network "private_network", ip: "10.0.0.100"
 
