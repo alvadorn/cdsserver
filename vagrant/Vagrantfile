@@ -10,8 +10,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box_url = "centos/7"
 
   config.ssh.username = "root"
-  #config.ssh.password = "vagrant"
-  #config.ssh.insert_key = "true"
+  config.ssh.password = "vagrant"
+  config.ssh.insert_key = "true"
 
   config.vm.network "private_network", ip: "10.0.0.100"
 
@@ -25,7 +25,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "../ansible/playbook.yml"
-    ansible.ask_sudo_pass = true
+    #ansible.ask_sudo_pass = true
   end
 
 end
